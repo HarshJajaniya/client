@@ -1,15 +1,45 @@
 "use client";
 
-import { Search, Settings, Sun, Moon } from "lucide-react";
+import { Search, Settings, Sun, Moon, Menu } from "lucide-react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import { useEffect, useState } from "react";
+import { useAppDispatch, useAppSelector } from "@/app/redux";
+import { setisSidebarCollapsed } from "@/state";
 
 const Navbar = () => {
+  const dispatch = useAppDispatch();
+  const isSidebarcollapsed = useAppSelector(
+    (state) => state.global.isSidebarCollapsed,
+  );
+  const isDarkMode = useAppSelector((state) => state.global.isDarkmode);
+
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  // ❗ Prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="dark:bg-dark-bg dark:border-stroke-dark flex h-16 items-center justify-between border-b border-gray-200 bg-white px-6" />
+    );
+  }
 
   return (
     <div className="dark:bg-dark-bg dark:border-stroke-dark flex h-16 items-center justify-between border-b border-gray-200 bg-white px-6">
       {/* Search Bar */}
+      <div className="flex items-center gap-8">
+        {!isSidebarcollapsed ? null : (
+          <button
+            onClick={() => dispatch(setisSidebarCollapsed(!isSidebarcollapsed))}
+          >
+            <Menu className="h-8 w-8 text-gray-700 dark:text-gray-200" />
+          </button>
+        )}
+      </div>
       <div className="relative h-12 w-[350px]">
         <Search className="pointer-events-none absolute top-1/2 right-4 h-5 w-5 -translate-y-1/2 text-black dark:text-white" />
         <input
