@@ -26,10 +26,15 @@ import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import Home from "@/app/page";
 import { setisSidebarCollapsed } from "@/state";
+import { useGetProjectsQuery } from "@/state/api";
 
 const Sidebar = () => {
   const [showProjects, setshowProjects] = useState(false);
   const [showPriorityList, setshowPriorityList] = useState(false);
+
+  const { data: projects } = useGetProjectsQuery();
+  console.log("PROJECTS FROM API:", projects);
+
   const dispatch = useAppDispatch();
   const isSidebarcollapsed = useAppSelector(
     (state) => state.global.isSidebarCollapsed,
@@ -55,7 +60,6 @@ const Sidebar = () => {
             </button>
           )}
         </div>
-
         {/* Team Section */}
         <div className="dark:border-stroke-dark flex items-center gap-5 border-y border-gray-200 px-8 py-4">
           <Image
@@ -100,6 +104,17 @@ const Sidebar = () => {
             <ChevronDown className="h-5 w-5 text-gray-500" />
           )}
         </button>
+        {/* Project list */}
+
+        {showProjects &&
+          projects?.map((project) => (
+            <SidebarLink
+              key={project.id}
+              href={`/projects/${project.id}`}
+              icon={Briefcase}
+              label={project.name}
+            />
+          ))}
         {/* Priority list */}
         <button
           onClick={() => setshowPriorityList((prev) => !prev)}
@@ -158,7 +173,7 @@ const SidebarLink = ({
   const pathname = usePathname();
   const isActive =
     pathname === href || (pathname === "/" && href === "/dashboard");
-  const widthscreen = window.innerWidth;
+  const widthscreen = typeof window !== "undefined" ? window.innerWidth : 1200;
 
   const dispatch = useAppDispatch();
   const isSidebarcollapsed = useAppSelector(

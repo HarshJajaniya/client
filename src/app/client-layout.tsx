@@ -1,6 +1,6 @@
 "use client";
 
-import { ThemeProvider } from "./component/ThemeProvider";
+import { ThemeProvider } from "../component/ThemeProvider";
 import DashboardWrapper from "./dashboardwrapper";
 
 export default function ClientLayout({
