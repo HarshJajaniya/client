@@ -164,6 +164,10 @@ const Task = ({ task }: TaskProps) => {
       {priority}
     </div>
   );
+  const imageAttachment = task.attachments?.find((att) =>
+    /\.(png|jpe?g|webp)$/i.test(att.fileName ?? ""),
+  );
+
   return (
     <div
       ref={(instance) => {
@@ -171,15 +175,14 @@ const Task = ({ task }: TaskProps) => {
       }}
       className={`dark:bg-dark-secondary mb-4 rounded-md bg-white ${isDragging ? "opacity-50" : "opacity-100"} `}
     >
-      {task.attachments && task.attachments.length > 0 && (
-        <Image
-          src={`/${task.attachments[0].fileUrl}`}
-          alt={task.attachments[0].fileName}
-          width={400}
-          height={200}
-          className="h-full w-auto rounded-t-md"
+      {imageAttachment && (
+        <img
+          src={`/${imageAttachment.fileURL}`}
+          alt={imageAttachment.fileName}
+          className="h-48 w-full rounded-t-md object-cover"
         />
       )}
+
       <div className="p-4 md:p-6">
         <div className="flex items-start justify-between">
           <div className="flex flex-1 flex-wrap items-center gap-2">
@@ -244,7 +247,7 @@ const Task = ({ task }: TaskProps) => {
             <div className="flex items-center text-gray-500 dark:text-neutral-500">
               <MessageSquareMore size={20} />
               <span className="ml-1 text-sm dark:text-neutral-100">
-                {task.points}
+                {task.comments?.length ?? 0}
               </span>
             </div>
           </div>
