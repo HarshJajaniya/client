@@ -12,7 +12,7 @@ export interface Project{
 }
 
 export interface User{
-  id:number,
+  userId?: number;
   username:string,
   email:string,
   profilePictureUrl?:string,
@@ -47,7 +47,7 @@ export interface Task{
     description?:string,
     status?:Status,  
     priority?:Priority,
-    tags?:string[],
+    tags?:string,
     startDate?:Date,
     dueDate?:Date,
     points?:number,

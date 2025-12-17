@@ -4,9 +4,17 @@ import {
   useUpdateTaskStatusMutation,
 } from "@/state/api";
 import React from "react";
-import { DndProvider, useDrop } from "react-dnd";
+import { DndProvider, useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { Task as TaskType } from "@/state/api";
+import {
+  Ellipsis,
+  EllipsisVertical,
+  MessageSquareMore,
+  Plus,
+} from "lucide-react";
+import { format } from "date-fns";
+import Image from "next/image";
 
 type BroadProps = {
   id: string;
@@ -35,7 +43,7 @@ const Boardview = ({ id, setIsModelNewTaskOpen }: BroadProps) => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 xl:grid-cols-6">
+      <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 xl:grid-cols-4">
         {taskStatus.map((status) => {
           return (
             <TaskColumn
@@ -98,7 +106,148 @@ const TaskColumn = ({
         <div className="dark:bg-dark-secondary flex w-full items-center justify-between rounded-e-lg bg-white px-5 py-4">
           <h3 className="flex items-center text-lg font-semibold dark:text-white">
             {status}{" "}
+            <span
+              className="m-2 inline-block rounded-full bg-gray-200 p-1 text-center text-sm leading-none dark:bg-gray-700"
+              style={{ width: "1.5rem", height: "1.5rem" }}
+            ></span>
           </h3>
+          <div className="flex items-center gap-1">
+            <button className="flex h-6 w-5 items-center justify-center dark:text-neutral-500">
+              <Ellipsis size={26} />
+            </button>
+            <button
+              className="flex h-6 w-5 items-center justify-center rounded bg-gray-200 dark:bg-gray-700 dark:text-white"
+              onClick={() => setIsmodalTaskOpen(true)}
+            >
+              <Plus size={26} />
+            </button>
+          </div>
+        </div>
+      </div>
+      {tasks
+        .filter((task) => task.status === status)
+        .map((task) => (
+          <Task key={task.id} task={task} />
+        ))}
+    </div>
+  );
+};
+
+type TaskProps = {
+  task: TaskType;
+};
+
+const Task = ({ task }: TaskProps) => {
+  const [{ isDragging }, drag] = useDrag({
+    type: "TASK",
+    item: { id: task.id },
+    collect: (monitor: any) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
+  const taskTagsSplit = task.tags ? task.tags.split(",") : [];
+
+  const formattedStartDate = task.startDate
+    ? format(new Date(task.startDate), "P")
+    : "";
+  const formattedDueDate = task.dueDate
+    ? format(new Date(task.dueDate), "P")
+    : "";
+
+  const numberofComments = (task.comments && task.comments.length) || 0;
+
+  const Prioritytags = ({ priority }: { priority: TaskType["priority"] }) => (
+    <div
+      className={`rounded-full px-2 py-1 text-xs font-semibold ${priority === "Urgent" ? "bg-red-200 text-red-700" : priority === "High" ? "bg-yellow-200 text-yellow-700" : priority === "Medium" ? "bg-green-200 text-green-700" : priority === "Low" ? "bg-blue-200 text-blue-700" : "bg-gray-200 text-gray-700"}`}
+    >
+      {priority}
+    </div>
+  );
+  return (
+    <div
+      ref={(instance) => {
+        drag(instance);
+      }}
+      className={`dark:bg-dark-secondary mb-4 rounded-md bg-white ${isDragging ? "opacity-50" : "opacity-100"} `}
+    >
+      {task.attachments && task.attachments.length > 0 && (
+        <Image
+          src={`/${task.attachments[0].fileUrl}`}
+          alt={task.attachments[0].fileName}
+          width={400}
+          height={200}
+          className="h-full w-auto rounded-t-md"
+        />
+      )}
+      <div className="p-4 md:p-6">
+        <div className="flex items-start justify-between">
+          <div className="flex flex-1 flex-wrap items-center gap-2">
+            {task.priority && <Prioritytags priority={task.priority} />}
+            <div className="flex gap-2">
+              {taskTagsSplit.map((tag) => (
+                <div
+                  key={tag}
+                  className="rounded-full bg-blue-100 px-2 py-1 text-xs"
+                >
+                  {" "}
+                  {tag}
+                </div>
+              ))}
+            </div>
+          </div>
+          <button className="flex h-6 w-4 shrink-0 items-center justify-center dark:text-neutral-500">
+            <EllipsisVertical width={26} />
+          </button>
+        </div>
+        <div className="my-3 flex justify-between">
+          <h4 className="text-md font-bold dark:text-white"> {task.title}</h4>
+          {typeof task.points === "number" && (
+            <div className="font-xs font-semibold dark:text-white">
+              {task.points}
+            </div>
+          )}
+        </div>
+        <div className="font-xs dark:neutral-500 text-gray-500">
+          {formattedStartDate && <span>{formattedStartDate} - </span>}
+          {formattedDueDate && <span>{formattedDueDate}</span>}
+        </div>
+        <p className="text-xs text-gray-600 dark:text-neutral-500">
+          {task.description}
+        </p>
+        <div className="mt-4 border-t border-gray-200 dark:border-gray-700">
+          {/* Footer with assignee and comments */}
+          <div className="mt-3 flex items-center justify-between">
+            <div className="flex -space-x-2 overflow-hidden">
+              {task.assignee && (
+                <Image
+                  key={task.assignee.userId}
+                  src={`/${task.assignee.profilePictureUrl!}`}
+                  alt={task.assignee.username}
+                  width={30}
+                  height={30}
+                  className="dark:border-dark-secondary h-8 w-8 rounded-full border-2 border-white object-cover"
+                />
+              )}
+
+              {task.author && (
+                <Image
+                  key={task.author.userId}
+                  src={`/${task.author.profilePictureUrl!}`}
+                  alt={task.author.username}
+                  width={30}
+                  height={30}
+                  className="dark:border-dark-secondary h-8 w-8 rounded-full border-2 border-white object-cover"
+                />
+              )}
+            </div>
+            <div className="flex items-center text-gray-500 dark:text-neutral-500">
+              <MessageSquareMore size={20} />
+              <span className="ml-1 text-sm dark:text-neutral-100">
+                {task.points}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
