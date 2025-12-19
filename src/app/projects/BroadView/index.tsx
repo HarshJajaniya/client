@@ -103,7 +103,7 @@ const TaskColumn = ({
           className={`!bg-[${statusColors[status]}] w-2 rounded-s-lg`}
           style={{ backgroundColor: statusColors[status] }}
         />
-        <div className="dark:bg-dark-secondary flex w-full items-center justify-between rounded-e-lg bg-white px-5 py-4">
+        <div className="dark:bg-dark-bg-2 flex w-full items-center justify-between rounded-e-lg bg-white px-5 py-4">
           <h3 className="flex items-center text-lg font-semibold dark:text-white">
             {status}{" "}
             <span
