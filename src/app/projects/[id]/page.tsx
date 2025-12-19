@@ -5,6 +5,7 @@ import ProjectHeader from "@/app/projects/projectHeader";
 import Board from "@/app/projects/BroadView";
 import List from "@/app/projects/ListView";
 import Timeline from "../TimelineView";
+import TableView from "../TableView";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -28,6 +29,9 @@ export default function Project(props: Props) {
       )}
       {activeTab === "Timeline" && (
         <Timeline id={id} setIsModelNewTaskOpen={setIsmodalTaskOpen} />
+      )}
+      {activeTab === "Table" && (
+        <TableView id={id} setIsModalNewTaskOpen={setIsmodalTaskOpen} />
       )}
     </div>
   );
