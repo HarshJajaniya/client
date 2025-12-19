@@ -6,6 +6,7 @@ import Board from "@/app/projects/BroadView";
 import List from "@/app/projects/ListView";
 import Timeline from "../TimelineView";
 import TableView from "../TableView";
+import ModalNewTask from "@/component/ModalNewTask";
 
 type Props = {
   params: Promise<{ id: string }>;
@@ -20,6 +21,11 @@ export default function Project(props: Props) {
 
   return (
     <div>
+      <ModalNewTask
+        isOpen={ismodelTaskOpen}
+        onClose={() => setIsmodalTaskOpen(false)}
+        id={id}
+      />
       <ProjectHeader activeTab={activeTab} setActiveTab={setActiveTab} />
       {activeTab === "Board" && (
         <Board id={id} setIsModelNewTaskOpen={setIsmodalTaskOpen} />

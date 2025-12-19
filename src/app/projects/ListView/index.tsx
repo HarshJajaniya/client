@@ -19,7 +19,18 @@ const ListView = ({ id, setIsModelNewTaskOpen }: Props) => {
   return (
     <div className="px-4 pb-8 xl:px-6">
       <div className="pt-5">
-        <Header name="Tasks List" />
+        <Header
+          name="Tasks List"
+          buttonComponent={
+            <button
+              className="bg-blue-primary flex items-center rounded px-3 py-2 text-white hover:bg-blue-600"
+              onClick={() => setIsModelNewTaskOpen(true)}
+            >
+              Add Task
+            </button>
+          }
+          isSmalltext
+        />
       </div>
       <div className="grid grid-cols-1 gap-1 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
         {tasks?.map((task: Task) => (
