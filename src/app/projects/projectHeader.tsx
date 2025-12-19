@@ -18,7 +18,7 @@ const projectHeader = ({ activeTab, setActiveTab }: Props) => {
         <Header name="Project design Development" />
       </div>
       {/* Tabs */}
-      <div className="dark:border-stroke-dark flex flex-wrap-reverse gap-2 border-y border-gray-200 pt-2 pb-[8px] md:items-center">
+      <div className="dark:border-stroke-dark flex flex-wrap-reverse gap-2 border-y border-gray-200 pt-2 pb-2 md:items-center">
         <div className="flex flex-1 items-center gap-2 md:gap-4">
           <TabButton
             name="Board"
@@ -78,7 +78,7 @@ const TabButton = ({ name, icon, setActiveTab, activeTab }: TabButtonProps) => {
 
   return (
     <button
-      className={`relative flex items-center gap-2 px-1 py-2 text-gray-500 after:absolute after:-bottom-[9px] after:left-0 after:h-[1px] after:w-full hover:text-blue-600 sm:px-2 lg:px-4 dark:text-neutral-500 dark:hover:text-white ${
+      className={`relative flex items-center gap-2 px-1 py-2 text-gray-500 after:absolute after:-bottom-[9px] after:left-0 after:h-px after:w-full hover:text-blue-600 sm:px-2 lg:px-4 dark:text-neutral-500 dark:hover:text-white ${
         isActive ? "text-blue-600 after:bg-blue-600 dark:text-white" : ""
       }`}
       onClick={() => setActiveTab(name)}
