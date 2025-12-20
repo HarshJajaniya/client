@@ -2,6 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { error } from 'console';
 import { create } from "domain";
 import { get } from "http";
+import { TextAnchor } from 'recharts/types/component/Text';
 
 export interface Project{
   id:number,
@@ -69,10 +70,17 @@ export interface SearchResult{
   users?: User[];
 }
 
+export interface Teams{
+  teamId:number,
+  teamName:string,
+  ProductOwnerUserId?:number,
+  ProductManagerUserId?:number ,
+}
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
-  tagTypes: ["Projects", "Tasks", "Users"],
+  tagTypes: ["Projects", "Tasks", "Users", "Teams"],
   endpoints: (build) => ({
     // Define your endpoints here
     getProjects: build.query<Project[], void>({
@@ -114,8 +122,12 @@ export const api = createApi({
       query: () => "users", 
       providesTags: ["Users"],
     }),
+    getTeams: build.query<Teams[], void>({
+      query: () => "teams", 
+      providesTags: ["Teams"],
+    }),
   }),
 
 });
 
-export const { useGetUsersQuery,useGetProjectsQuery, useCreateProjectMutation, useGetTasksQuery, useCreateTaskMutation, useUpdateTaskStatusMutation,useSearchQuery } = api;
+export const { useGetUsersQuery,useGetProjectsQuery, useCreateProjectMutation, useGetTasksQuery, useCreateTaskMutation, useUpdateTaskStatusMutation,useSearchQuery, useGetTeamsQuery } = api;
