@@ -7,8 +7,8 @@ export interface Project{
   id:number,
   name:string,
   description?:string,
-  startDate?:Date,
-  endDate?:Date
+  startDate?:string,
+  endDate?:string
 }
 
 export interface User{
@@ -63,6 +63,12 @@ export interface Task{
 
 }
 
+export interface SearchResult{
+  projects?: Project[];
+  tasks?: Task[];
+  users?: User[];
+}
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
@@ -101,7 +107,11 @@ export const api = createApi({
       }),
       invalidatesTags: (result,error,{taskId})=> [{type: "Tasks", id: taskId}],
     }),
+    search: build.query<SearchResult, { query: string }>({ 
+      query: ({ query }) => `search?query=${(query)}`,
+    }),
   }),
+
 });
 
-export const { useGetProjectsQuery, useCreateProjectMutation, useGetTasksQuery, useCreateTaskMutation, useUpdateTaskStatusMutation } = api;
+export const { useGetProjectsQuery, useCreateProjectMutation, useGetTasksQuery, useCreateTaskMutation, useUpdateTaskStatusMutation,useSearchQuery } = api;
