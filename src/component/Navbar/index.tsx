@@ -64,7 +64,7 @@ const Navbar = () => {
         </button>
 
         <Link
-          href="/settings"
+          href="/setting"
           className="dark:hover:bg-dark-bg-3 rounded-md p-2 hover:bg-gray-100"
         >
           <Settings className="h-6 w-6 text-gray-700 dark:text-gray-200" />
