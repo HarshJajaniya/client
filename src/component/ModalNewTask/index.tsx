@@ -13,10 +13,10 @@ import { Tags } from "lucide-react";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
-  id: string;
+  id?: string | null;
 };
 
-const ModalNewTask = ({ isOpen, onClose, id }: Props) => {
+const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
   const [createTask, { isLoading }] = useCreateTaskMutation();
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -27,9 +27,16 @@ const ModalNewTask = ({ isOpen, onClose, id }: Props) => {
   const [dueDate, setDueDate] = useState("");
   const [authorUserId, setAuthorUserId] = useState("");
   const [assigneeUserId, setAssigneeUserId] = useState("");
+  const [projectId, setProjectId] = useState("");
 
   const handlesubmit = async () => {
-    if (!title || !authorUserId || !assigneeUserId) return;
+    if (
+      !title ||
+      !authorUserId ||
+      !assigneeUserId ||
+      !(id !== null || projectId)
+    )
+      return;
 
     await createTask({
       title,
@@ -41,12 +48,14 @@ const ModalNewTask = ({ isOpen, onClose, id }: Props) => {
       assignedUserId: Number(assigneeUserId),
       startDate: new Date(startDate),
       dueDate: new Date(dueDate),
-      projectId: Number(id),
+      projectId: id != null ? Number(id) : Number(projectId),
     });
   };
 
   const isfalidForm = () => {
-    return title && authorUserId && assigneeUserId;
+    return (
+      title && authorUserId && assigneeUserId && !(id !== null || projectId)
+    );
   };
 
   const selectStyles = "mb-4 block w-full rounded border border-gray-300 p-2 ";
@@ -140,6 +149,15 @@ const ModalNewTask = ({ isOpen, onClose, id }: Props) => {
           value={assigneeUserId}
           onChange={(e) => setAssigneeUserId(e.target.value)}
         />
+        {id === null && (
+          <input
+            type="text"
+            placeholder="ProjectId"
+            className={inputStyles}
+            value={projectId}
+            onChange={(e) => setProjectId(e.target.value)}
+          />
+        )}
         <button
           type="submit"
           className={`bg-blue-primary mt-4 flex justify-center rounded-md border border-transparent px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-600 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:outline-none ${
