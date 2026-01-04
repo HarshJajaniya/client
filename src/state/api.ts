@@ -79,7 +79,7 @@ export interface Teams{
 
 export const api = createApi({
   reducerPath: "api",
-  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_API_BASE_URL }),
   tagTypes: ["Projects", "Tasks", "Users", "Teams"],
   endpoints: (build) => ({
     // Define your endpoints here
