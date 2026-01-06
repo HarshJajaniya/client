@@ -19,7 +19,7 @@ const TaskCard = ({ task }: Props) => {
       {task.attachments && task.attachments.length > 0 && (
         <div className="mb-4 overflow-hidden rounded-lg">
           <Image
-            src={`/${task.attachments[0].fileURL}`}
+            src={`https://nitrogen-bucket-1.s3.ap-south-1.amazonaws.com/${task.attachments[0].fileURL}`}
             alt={task.attachments[0].fileName}
             width={400}
             height={200}

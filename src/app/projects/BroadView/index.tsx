@@ -177,7 +177,7 @@ const Task = ({ task }: TaskProps) => {
     >
       {imageAttachment && (
         <img
-          src={`/${imageAttachment.fileURL}`}
+          src={`https://nitrogen-bucket-1.s3.ap-south-1.amazonaws.com/${imageAttachment.fileURL}`}
           alt={imageAttachment.fileName}
           className="h-48 w-full rounded-t-md object-cover"
         />
@@ -225,7 +225,7 @@ const Task = ({ task }: TaskProps) => {
               {task.assignee && (
                 <Image
                   key={task.assignee.userId}
-                  src={`/${task.assignee.profilePictureUrl!}`}
+                  src={`https://nitrogen-bucket-1.s3.ap-south-1.amazonaws.com/${task.assignee.profilePictureUrl!}`}
                   alt={task.assignee.username}
                   width={30}
                   height={30}
@@ -236,7 +236,7 @@ const Task = ({ task }: TaskProps) => {
               {task.author && (
                 <Image
                   key={task.author.userId}
-                  src={`/${task.author.profilePictureUrl!}`}
+                  src={`https://nitrogen-bucket-1.s3.ap-south-1.amazonaws.com/${task.author.profilePictureUrl!}`}
                   alt={task.author.username}
                   width={30}
                   height={30}

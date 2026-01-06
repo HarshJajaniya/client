@@ -64,7 +64,7 @@ const Sidebar = () => {
         <div className="dark:border-stroke-dark flex items-center gap-5 border-y border-gray-200 px-8 py-4">
           <Image
             className="rounded-full"
-            src="/logo.png"
+            src="https://nitrogen-bucket-1.s3.ap-south-1.amazonaws.com/logo.png"
             alt="Team"
             width={40}
             height={40}
