@@ -25,7 +25,7 @@ const columns: GridColDef[] = [
     renderCell: (params) => (
       <div className="flex h-full w-full items-center justify-center">
         <img
-          src={params.value}
+          src={`https://nitrogen-bucket-1.s3.ap-south-1.amazonaws.com/${params.value}`}
           alt="Profile"
           className="h-9 w-9 rounded-full object-cover"
         />
