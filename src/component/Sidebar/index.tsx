@@ -26,13 +26,27 @@ import { usePathname } from "next/navigation";
 import { useAppDispatch, useAppSelector } from "@/app/redux";
 import Home from "@/app/page";
 import { setisSidebarCollapsed } from "@/state";
-import { useGetProjectsQuery } from "@/state/api";
+import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
+import { signOut } from "aws-amplify/auth";
 
 const Sidebar = () => {
   const [showProjects, setshowProjects] = useState(false);
   const [showPriorityList, setshowPriorityList] = useState(false);
 
   const { data: projects } = useGetProjectsQuery();
+
+  const { data: currentUser } = useGetAuthUserQuery({});
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      // Redirect to login page or perform other actions after sign-out
+    } catch (error) {
+      console.error("Error signing out:", error);
+    }
+  };
+  if (!currentUser) return null;
+  const currentUserDetials = currentUser?.userDetails;
+
   console.log("PROJECTS FROM API:", projects);
 
   const dispatch = useAppDispatch();
@@ -152,6 +166,32 @@ const Sidebar = () => {
             />
           </>
         )}
+      </div>
+      <div className="z-10 mt-32 flex w-full flex-col items-center gap-4 bg-white px-8 py-4 md:hidden dark:bg-black">
+        <div className="flex w-full items-center">
+          <div className="align-center flex h-9 w-9 justify-center">
+            {!!currentUserDetials?.profilePictureUrl ? (
+              <Image
+                src={`https://pm-s3-images.s3.us-east-2.amazonaws.com/${currentUserDetials?.profilePictureUrl}`}
+                alt={currentUserDetials?.username || "User Profile Picture"}
+                width={100}
+                height={50}
+                className="h-full rounded-full object-cover"
+              />
+            ) : (
+              <User className="h-6 w-6 cursor-pointer self-center rounded-full dark:text-white" />
+            )}
+          </div>
+          <span className="mx-3 text-gray-800 dark:text-white">
+            {currentUserDetials?.username}
+          </span>
+          <button
+            className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
+            onClick={handleSignOut}
+          >
+            Sign out
+          </button>
+        </div>
       </div>
     </div>
   );
