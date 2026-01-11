@@ -1,36 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+🚀 NITROGEN – Project Management System
 
-## Getting Started
+Nitrogen is a cloud-native full-stack Project & Task Management System built using Next.js, AWS, Prisma, and PostgreSQL, designed to simulate real-world enterprise workflows.
 
-First, run the development server:
+📘 Frontend – README
 
-```bash
+client/README.md
+
+🧠 Overview
+
+The Nitrogen Frontend is a modern, responsive web application that allows users to:
+
+Authenticate securely using AWS Cognito
+
+Create and manage Projects
+
+Create, assign, and track Tasks
+
+View tasks by priority, status, and ownership
+
+Interact with a secure, scalable backend API
+
+🛠 Tech Stack
+Core
+
+Next.js (App Router)
+
+React
+
+TypeScript
+
+Tailwind CSS
+
+State & API
+
+Redux Toolkit
+
+RTK Query
+
+Authentication
+
+AWS Amplify
+
+AWS Cognito User Pools
+
+UI
+
+MUI DataGrid
+
+Custom Modal Components
+
+Lucide Icons
+
+🔐 Authentication Flow
+User Login
+ ↓
+AWS Cognito
+ ↓
+JWT Access Token
+ ↓
+Token attached to API requests
+ ↓
+Backend validates token
+
+🔁 Frontend Data Flow
+UI Event
+ ↓
+RTK Query (Mutation / Query)
+ ↓
+API Gateway (HTTPS)
+ ↓
+Backend Lambda
+ ↓
+Database
+ ↓
+Response → UI Update
+
+🌐 Environment Variables
+NEXT_PUBLIC_API_URL=https://<api-id>.execute-api.ap-south-1.amazonaws.com/prod
+NEXT_PUBLIC_COGNITO_USER_POOL_ID=ap-south-1_xxxxx
+NEXT_PUBLIC_COGNITO_USER_POOL_CLIENT_ID=xxxxxxxx
+
+
+Configured in:
+
+.env.local
+
+AWS Amplify Console
+
+📂 Folder Structure
+client/
+├── app/
+│   ├── redux/
+│   ├── auth/
+│   └── pages/
+├── components/
+│   ├── Modal.tsx
+│   ├── TaskCard.tsx
+│   └── Header.tsx
+├── state/
+│   └── api.ts
+├── public/
+└── styles/
+
+✨ Features
+
+✅ Secure authentication
+
+✅ Project CRUD
+
+✅ Task CRUD
+
+✅ Priority & Status filtering
+
+✅ Modal-based UI
+
+✅ Optimized API caching
+
+✅ Fully typed API integration
+
+🚀 Running Locally
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+☁️ Deployment
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Hosted on AWS Amplify
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+CI/CD via GitHub
 
-## Learn More
+Environment variables managed via Amplify Console
 
-To learn more about Next.js, take a look at the following resources:
+👨‍💻 Author
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Harsh Jajaniya
+Frontend • UI/UX • Cloud Engineering
