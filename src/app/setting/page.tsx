@@ -1,37 +1,87 @@
 "use client";
+
 import Header from "@/component/Header";
-import React from "react";
+import React, { useState } from "react";
 
 const Settings = () => {
-  const userSettings = {
-    username: "Harsh Jajaniya",
+  const [isEditing, setIsEditing] = useState(false);
+
+  const [userSettings, setUserSettings] = useState({
+    username: "username",
     email: "email@gmail.com",
     teamName: "Nitrogen",
     roleName: "Developer",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setUserSettings((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const labelstyle = "block text-sm font-medium ";
-  const textstyle = "mt-1 block w-full border border-gray-300";
+  const handleSave = () => {
+    setIsEditing(false);
+
+    // 🔹 Later: API call
+    // await updateUserSettings(userSettings)
+    console.log("Saved settings:", userSettings);
+  };
+
+  const labelStyle = "block text-sm font-medium text-gray-600";
+  const inputStyle =
+    "mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-black focus:outline-none";
+  const valueStyle =
+    "mt-1 block w-full rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm";
+
   return (
-    <div className="p-8">
+    <div className="max-w-xl p-8">
       <Header name="Settings" />
+
+      <div className="mb-6 flex justify-end">
+        {isEditing ? (
+          <button
+            onClick={handleSave}
+            className="rounded-md bg-black px-4 py-2 text-sm text-white"
+          >
+            Save
+          </button>
+        ) : (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="rounded-md border border-gray-300 px-4 py-2 text-sm"
+          >
+            Edit
+          </button>
+        )}
+      </div>
+
       <div className="space-y-4">
-        <div>
-          <label className={labelstyle}>Username</label>
-          <div className={textstyle}>{userSettings.username}</div>
-        </div>
-        <div>
-          <label className={labelstyle}>Email</label>
-          <div className={textstyle}>{userSettings.email}</div>
-        </div>
-        <div>
-          <label className={labelstyle}>Team Name</label>
-          <div className={textstyle}>{userSettings.teamName}</div>
-        </div>
-        <div>
-          <label className={labelstyle}>Role Name</label>
-          <div className={textstyle}>{userSettings.roleName}</div>
-        </div>
+        {[
+          { label: "Username", key: "username" },
+          { label: "Email", key: "email" },
+          { label: "Team Name", key: "teamName" },
+          { label: "Role Name", key: "roleName" },
+        ].map((field) => (
+          <div key={field.key}>
+            <label className={labelStyle}>{field.label}</label>
+
+            {isEditing ? (
+              <input
+                type="text"
+                name={field.key}
+                value={userSettings[field.key as keyof typeof userSettings]}
+                onChange={handleChange}
+                className={inputStyle}
+              />
+            ) : (
+              <div className={valueStyle}>
+                {userSettings[field.key as keyof typeof userSettings]}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );
