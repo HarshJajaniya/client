@@ -3,7 +3,7 @@ import "./globals.css";
 import ClientLayout from "./client-layout";
 
 export const metadata: Metadata = {
-  title: "EDLIST",
+  title: " NITROGEN - Task Manager",
   description: "Task manager dashboard",
 };
 

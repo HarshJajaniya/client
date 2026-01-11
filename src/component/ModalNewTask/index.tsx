@@ -22,36 +22,37 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
   const [assigneeUserId, setAssigneeUserId] = useState("");
   const [projectId, setProjectId] = useState("");
 
-  const isValidForm = () => {
-    return (
-      title.trim().length > 0 &&
-      authorUserId.trim().length > 0 &&
-      assigneeUserId.trim().length > 0 &&
-      (id !== null || projectId.trim().length > 0)
-    );
-  };
+  const isValidForm = () =>
+    title.trim() &&
+    authorUserId.trim() &&
+    assigneeUserId.trim() &&
+    (id !== null || projectId.trim());
 
   const handleSubmit = async () => {
     if (!isValidForm()) return;
 
-    await createTask({
-      title,
-      description,
-      status,
-      priority,
-      tags,
-      authorUserId: Number(authorUserId),
-      assignedUserId: Number(assigneeUserId),
-      startDate: startDate ? new Date(startDate) : undefined,
-      dueDate: dueDate ? new Date(dueDate) : undefined,
-      projectId: id !== null ? Number(id) : Number(projectId),
-    });
+    try {
+      await createTask({
+        title,
+        description,
+        status,
+        priority,
+        tags,
+        authorUserId: Number(authorUserId),
+        assignedUserId: Number(assigneeUserId),
+        projectId: id ? Number(id) : Number(projectId),
+        startDate: startDate ? new Date(startDate).toISOString() : undefined,
+        dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
+      }).unwrap();
 
-    onClose();
+      onClose();
+    } catch (err) {
+      console.error("Create task failed:", err);
+      alert("Failed to create task. Check console.");
+    }
   };
 
   const inputStyles = "w-full rounded border border-gray-300 p-2 shadow-sm";
-
   const selectStyles = "w-full rounded border border-gray-300 p-2";
 
   return (
@@ -81,9 +82,7 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
           <select
             className={selectStyles}
             value={status}
-            onChange={(e) =>
-              setStatus(Status[e.target.value as keyof typeof Status])
-            }
+            onChange={(e) => setStatus(e.target.value as Status)}
           >
             <option value={Status.ToDo}>To Do</option>
             <option value={Status.WorkInProgress}>Work In Progress</option>
@@ -94,9 +93,7 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
           <select
             className={selectStyles}
             value={priority}
-            onChange={(e) =>
-              setPriority(Priority[e.target.value as keyof typeof Priority])
-            }
+            onChange={(e) => setPriority(e.target.value as Priority)}
           >
             <option value={Priority.Urgent}>Urgent</option>
             <option value={Priority.High}>High</option>
@@ -134,7 +131,6 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
           value={authorUserId}
           onChange={(e) => setAuthorUserId(e.target.value)}
         />
-
         <input
           className={inputStyles}
           placeholder="Assignee User ID"
