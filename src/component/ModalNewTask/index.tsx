@@ -1,14 +1,6 @@
-import {
-  Priority,
-  Status,
-  useCreateProjectMutation,
-  useCreateTaskMutation,
-} from "@/state/api";
+import { Priority, Status, useCreateTaskMutation } from "@/state/api";
 import Modal from "@/component/Modal";
 import React, { useState } from "react";
-import { start } from "repl";
-import { is } from "date-fns/locale";
-import { Tags } from "lucide-react";
 
 type Props = {
   isOpen: boolean;
@@ -18,6 +10,7 @@ type Props = {
 
 const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
   const [createTask, { isLoading }] = useCreateTaskMutation();
+
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState<Status>(Status.ToDo);
@@ -29,14 +22,17 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
   const [assigneeUserId, setAssigneeUserId] = useState("");
   const [projectId, setProjectId] = useState("");
 
-  const handlesubmit = async () => {
-    if (
-      !title ||
-      !authorUserId ||
-      !assigneeUserId ||
-      !(id !== null || projectId)
-    )
-      return;
+  const isValidForm = () => {
+    return (
+      title.trim().length > 0 &&
+      authorUserId.trim().length > 0 &&
+      assigneeUserId.trim().length > 0 &&
+      (id !== null || projectId.trim().length > 0)
+    );
+  };
+
+  const handleSubmit = async () => {
+    if (!isValidForm()) return;
 
     await createTask({
       title,
@@ -46,67 +42,62 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
       tags,
       authorUserId: Number(authorUserId),
       assignedUserId: Number(assigneeUserId),
-      startDate: new Date(startDate),
-      dueDate: new Date(dueDate),
-      projectId: id != null ? Number(id) : Number(projectId),
+      startDate: startDate ? new Date(startDate) : undefined,
+      dueDate: dueDate ? new Date(dueDate) : undefined,
+      projectId: id !== null ? Number(id) : Number(projectId),
     });
+
+    onClose();
   };
 
-  const isfalidForm = () => {
-    return (
-      title && authorUserId && assigneeUserId && !(id !== null || projectId)
-    );
-  };
+  const inputStyles = "w-full rounded border border-gray-300 p-2 shadow-sm";
 
-  const selectStyles = "mb-4 block w-full rounded border border-gray-300 p-2 ";
-
-  const inputStyles =
-    "w-full rounded border border-gray-300 p-2 shadow-sm dark:border-dark-tertiary dark:bg-dark-tertiary dark:text-white dark:focus:outline-none";
+  const selectStyles = "w-full rounded border border-gray-300 p-2";
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} name="Create New Task">
       <form
-        className="mt-4 space-y-6"
+        className="mt-4 space-y-4"
         onSubmit={(e) => {
           e.preventDefault();
-          handlesubmit();
+          handleSubmit();
         }}
       >
         <input
-          type="text"
-          placeholder="Title"
           className={inputStyles}
+          placeholder="Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
+
         <textarea
-          placeholder="Task Description"
           className={inputStyles}
+          placeholder="Description"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <div className="grid grid-cols-1 gap-6 sm:gap-2 md:grid-cols-2">
+
+        <div className="grid grid-cols-2 gap-2">
           <select
             className={selectStyles}
             value={status}
-            onChange={(e) => {
-              setStatus(Status[e.target.value as keyof typeof Status]);
-            }}
+            onChange={(e) =>
+              setStatus(Status[e.target.value as keyof typeof Status])
+            }
           >
-            <option value="">Select Status</option>
             <option value={Status.ToDo}>To Do</option>
             <option value={Status.WorkInProgress}>Work In Progress</option>
             <option value={Status.UnderReview}>Under Review</option>
             <option value={Status.Completed}>Completed</option>
           </select>
+
           <select
             className={selectStyles}
             value={priority}
-            onChange={(e) => {
-              setPriority(Priority[e.target.value as keyof typeof Priority]);
-            }}
+            onChange={(e) =>
+              setPriority(Priority[e.target.value as keyof typeof Priority])
+            }
           >
-            <option value="">Select Status</option>
             <option value={Priority.Urgent}>Urgent</option>
             <option value={Priority.High}>High</option>
             <option value={Priority.Medium}>Medium</option>
@@ -114,14 +105,15 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
             <option value={Priority.Backlog}>Backlog</option>
           </select>
         </div>
+
         <input
-          type="text"
-          placeholder="Tags (comma separated)"
           className={inputStyles}
+          placeholder="Tags"
           value={tags}
           onChange={(e) => setTags(e.target.value)}
         />
-        <div className="grid grid-cols-1 gap-6 sm:gap-2 md:grid-cols-2">
+
+        <div className="grid grid-cols-2 gap-2">
           <input
             type="date"
             className={inputStyles}
@@ -135,35 +127,38 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
             onChange={(e) => setDueDate(e.target.value)}
           />
         </div>
+
         <input
-          type="text"
-          placeholder="Author User ID"
           className={inputStyles}
+          placeholder="Author User ID"
           value={authorUserId}
           onChange={(e) => setAuthorUserId(e.target.value)}
         />
+
         <input
-          type="text"
-          placeholder="Assignee User ID"
           className={inputStyles}
+          placeholder="Assignee User ID"
           value={assigneeUserId}
           onChange={(e) => setAssigneeUserId(e.target.value)}
         />
+
         {id === null && (
           <input
-            type="text"
-            placeholder="ProjectId"
             className={inputStyles}
+            placeholder="Project ID"
             value={projectId}
             onChange={(e) => setProjectId(e.target.value)}
           />
         )}
+
         <button
           type="submit"
-          className={`bg-blue-primary mt-4 flex justify-center rounded-md border border-transparent px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-blue-600 focus:ring-2 focus:ring-blue-600 focus:ring-offset-2 focus:outline-none ${
-            !isfalidForm() || isLoading ? "cursor-not-allowed opacity-50" : ""
+          disabled={!isValidForm() || isLoading}
+          className={`mt-4 w-full rounded bg-blue-600 px-4 py-2 text-white ${
+            !isValidForm() || isLoading
+              ? "cursor-not-allowed opacity-50"
+              : "hover:bg-blue-700"
           }`}
-          disabled={!isfalidForm() || isLoading}
         >
           {isLoading ? "Creating..." : "Create Task"}
         </button>
