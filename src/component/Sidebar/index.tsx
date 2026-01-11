@@ -1,6 +1,9 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import {
   AlertCircle,
   AlertOctagon,
@@ -16,89 +19,86 @@ import {
   Settings,
   ShieldAlert,
   User,
-  User2,
   Users,
   X,
 } from "lucide-react";
-import { useState } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+
 import { useAppDispatch, useAppSelector } from "@/app/redux";
-import Home from "@/app/page";
 import { setisSidebarCollapsed } from "@/state";
 import { useGetAuthUserQuery, useGetProjectsQuery } from "@/state/api";
 import { signOut } from "aws-amplify/auth";
 
+/* =========================
+   SIDEBAR
+========================= */
+
 const Sidebar = () => {
-  const [showProjects, setshowProjects] = useState(false);
-  const [showPriorityList, setshowPriorityList] = useState(false);
+  /* ✅ ALL HOOKS FIRST */
+  const [showProjects, setShowProjects] = useState(false);
+  const [showPriorityList, setShowPriorityList] = useState(false);
 
   const { data: projects } = useGetProjectsQuery();
-
   const { data: currentUser } = useGetAuthUserQuery({});
+
+  const dispatch = useAppDispatch();
+  const isSidebarCollapsed = useAppSelector(
+    (state) => state.global.isSidebarCollapsed,
+  );
+
+  /* ✅ SAFE EARLY RETURN (after hooks) */
+  if (!currentUser) return null;
+
+  const currentUserDetails = currentUser.userDetails;
+
+  const sidebarClassName = `fixed overflow-y-auto flex flex-col h-full justify-between shadow-xl transition-all duration-300 bg-white dark:bg-dark-bg z-40 ${
+    isSidebarCollapsed ? "w-0 hidden" : "w-64"
+  }`;
+
   const handleSignOut = async () => {
     try {
       await signOut();
-      // Redirect to login page or perform other actions after sign-out
     } catch (error) {
       console.error("Error signing out:", error);
     }
   };
-  if (!currentUser) return null;
-  const currentUserDetials = currentUser?.userDetails;
 
-  console.log("PROJECTS FROM API:", projects);
-
-  const dispatch = useAppDispatch();
-  const isSidebarcollapsed = useAppSelector(
-    (state) => state.global.isSidebarCollapsed,
-  );
-  const sidebarclassName = `fixed overflow-y-auto flex flex-col h-full justify-between shadow-xl transition-all duration-300 bg-white dark:bg-dark-bg z-40 ${
-    isSidebarcollapsed ? "w-0 hidden" : "w-64"
-  }`;
   return (
-    <div className={sidebarclassName}>
+    <div className={sidebarClassName}>
       <div className="flex w-full flex-col justify-start">
-        {/* Top Header */}
-        <div className="dark:bg-dark-bg dark:border-stroke-dark flex h-14 items-center justify-between border-b border-gray-200 bg-white px-6">
-          <div className="text-xl font-bold text-gray-800 dark:text-gray-100">
-            EDLIST
-          </div>
-          {isSidebarcollapsed ? null : (
+        {/* Header */}
+        <div className="dark:border-stroke-dark flex h-14 items-center justify-between border-b px-6">
+          <span className="text-xl font-bold">EDLIST</span>
+          {!isSidebarCollapsed && (
             <button
               onClick={() =>
-                dispatch(setisSidebarCollapsed(!isSidebarcollapsed))
+                dispatch(setisSidebarCollapsed(!isSidebarCollapsed))
               }
             >
-              <X className="h-6 w-6 text-gray-700 dark:text-gray-200" />
+              <X className="h-6 w-6" />
             </button>
           )}
         </div>
-        {/* Team Section */}
-        <div className="dark:border-stroke-dark flex items-center gap-5 border-y border-gray-200 px-8 py-4">
+
+        {/* Team */}
+        <div className="dark:border-stroke-dark flex items-center gap-5 border-y px-8 py-4">
           <Image
-            className="rounded-full"
             src="https://nitrogen-bucket-1.s3.ap-south-1.amazonaws.com/logo.png"
             alt="Team"
             width={40}
             height={40}
+            className="rounded-full"
           />
-
           <div>
-            <h3 className="text-md font-bold tracking-wide text-gray-800 dark:text-gray-200">
-              My Team
-            </h3>
-
-            <div className="mt-1 flex items-center gap-2">
-              <LockIcon className="h-4 w-4 text-gray-500 dark:text-gray-400" />
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                Private
-              </p>
+            <h3 className="font-bold">My Team</h3>
+            <div className="mt-1 flex items-center gap-2 text-sm text-gray-500">
+              <LockIcon className="h-4 w-4" />
+              Private
             </div>
           </div>
         </div>
-        <nav className="z-10 w-full flex-1 space-y-1 px-4 py-6">
-          {/* Navigation Links */}
+
+        {/* Navigation */}
+        <nav className="flex-1 space-y-1 px-4 py-6">
           <SidebarLink href="/" icon={HomeIcon} label="Home" />
           <SidebarLink href="/timeline" icon={Briefcase} label="Timeline" />
           <SidebarLink href="/search" icon={Search} label="Search" />
@@ -106,19 +106,15 @@ const Sidebar = () => {
           <SidebarLink href="/user" icon={User} label="User" />
           <SidebarLink href="/teams" icon={Users} label="Teams" />
         </nav>
-        {/* Projects Section */}
+
+        {/* Projects */}
         <button
-          onClick={() => setshowProjects((prev) => !prev)}
+          onClick={() => setShowProjects((p) => !p)}
           className="flex w-full items-center justify-between px-8 py-3 text-gray-500"
         >
-          <span className="">Projects</span>
-          {showProjects ? (
-            <ChevronUp className="h-5 w-5 text-gray-500" />
-          ) : (
-            <ChevronDown className="h-5 w-5 text-gray-500" />
-          )}
+          Projects
+          {showProjects ? <ChevronUp /> : <ChevronDown />}
         </button>
-        {/* Project list */}
 
         {showProjects &&
           projects?.map((project) => (
@@ -129,65 +125,61 @@ const Sidebar = () => {
               label={project.name}
             />
           ))}
-        {/* Priority list */}
+
+        {/* Priority */}
         <button
-          onClick={() => setshowPriorityList((prev) => !prev)}
+          onClick={() => setShowPriorityList((p) => !p)}
           className="flex w-full items-center justify-between px-8 py-3 text-gray-500"
         >
-          <span className="">Priority</span>
-          {showPriorityList ? (
-            <ChevronUp className="h-5 w-5 text-gray-500" />
-          ) : (
-            <ChevronDown className="h-5 w-5 text-gray-500" />
-          )}
+          Priority
+          {showPriorityList ? <ChevronUp /> : <ChevronDown />}
         </button>
+
         {showPriorityList && (
           <>
             <SidebarLink
+              href="/priority/urgent"
               icon={AlertCircle}
               label="Urgent"
-              href="/priority/urgent"
             />
             <SidebarLink
+              href="/priority/high"
               icon={ShieldAlert}
               label="High"
-              href="/priority/high"
             />
             <SidebarLink
+              href="/priority/medium"
               icon={AlertTriangle}
               label="Medium"
-              href="/priority/medium"
             />
-            <SidebarLink icon={AlertOctagon} label="Low" href="/priority/low" />
+            <SidebarLink href="/priority/low" icon={AlertOctagon} label="Low" />
             <SidebarLink
+              href="/priority/backlog"
               icon={Layers3}
               label="Backlog"
-              href="/priority/backlog"
             />
           </>
         )}
       </div>
-      <div className="z-10 mt-32 flex w-full flex-col items-center gap-4 bg-white px-8 py-4 md:hidden dark:bg-black">
-        <div className="flex w-full items-center">
-          <div className="align-center flex h-9 w-9 justify-center">
-            {!!currentUserDetials?.profilePictureUrl ? (
-              <Image
-                src={`https://pm-s3-images.s3.us-east-2.amazonaws.com/${currentUserDetials?.profilePictureUrl}`}
-                alt={currentUserDetials?.username || "User Profile Picture"}
-                width={100}
-                height={50}
-                className="h-full rounded-full object-cover"
-              />
-            ) : (
-              <User className="h-6 w-6 cursor-pointer self-center rounded-full dark:text-white" />
-            )}
-          </div>
-          <span className="mx-3 text-gray-800 dark:text-white">
-            {currentUserDetials?.username}
-          </span>
+
+      {/* User Footer (mobile) */}
+      <div className="px-8 py-4 md:hidden">
+        <div className="flex items-center gap-3">
+          {currentUserDetails?.profilePictureUrl ? (
+            <Image
+              src={`https://pm-s3-images.s3.us-east-2.amazonaws.com/${currentUserDetails.profilePictureUrl}`}
+              alt="Profile"
+              width={36}
+              height={36}
+              className="rounded-full"
+            />
+          ) : (
+            <User className="h-6 w-6" />
+          )}
+          <span>{currentUserDetails?.username}</span>
           <button
-            className="self-start rounded bg-blue-400 px-4 py-2 text-xs font-bold text-white hover:bg-blue-500 md:block"
             onClick={handleSignOut}
+            className="ml-auto rounded bg-blue-500 px-3 py-1 text-xs text-white"
           >
             Sign out
           </button>
@@ -197,48 +189,35 @@ const Sidebar = () => {
   );
 };
 
+export default Sidebar;
+
+/* =========================
+   SIDEBAR LINK
+========================= */
+
 interface SidebarLinkProps {
   href: string;
   icon: LucideIcon;
   label: string;
-  //   iscollapsed: boolean;
 }
 
-const SidebarLink = ({
-  href,
-  icon: Icon,
-  label,
-  //   iscollapsed,
-}: SidebarLinkProps) => {
+const SidebarLink = ({ href, icon: Icon, label }: SidebarLinkProps) => {
   const pathname = usePathname();
+
   const isActive =
     pathname === href || (pathname === "/" && href === "/dashboard");
-  const widthscreen = typeof window !== "undefined" ? window.innerWidth : 1200;
-
-  const dispatch = useAppDispatch();
-  const isSidebarcollapsed = useAppSelector(
-    (state) => state.global.isSidebarCollapsed,
-  );
 
   return (
-    <Link href={href} className="w-full">
+    <Link href={href} className="block">
       <div
-        className={`dark:hover:bg-dark-bg-3 relative flex cursor-pointer items-center gap-3 transition-colors hover:bg-gray-100 ${
+        className={`dark:hover:bg-dark-bg-3 relative flex items-center gap-3 px-6 py-3 hover:bg-gray-100 ${
           isActive ? "dark:bg-dark-bg-3 bg-gray-200" : ""
-        } justify-start px-6 py-3`}
+        }`}
       >
-        {isActive && (
-          <div className="dark:bg-blue-primary absolute left-0 h-full w-1 bg-blue-500" />
-        )}
-
-        <Icon className="h-8 w-8 text-gray-700 dark:text-gray-200" />
-
-        <span className="font-medium text-gray-800 dark:text-gray-100">
-          {label}
-        </span>
+        {isActive && <div className="absolute left-0 h-full w-1 bg-blue-500" />}
+        <Icon className="h-6 w-6" />
+        <span className="font-medium">{label}</span>
       </div>
     </Link>
   );
 };
-
-export default Sidebar;
