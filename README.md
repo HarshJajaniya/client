@@ -28,35 +28,18 @@ https://main.d2zm25dwm40v68.amplifyapp.com
 
 > 📌 Replace the image paths below with actual screenshots later
 
-### 🔐 Authentication (AWS Cognito)
-![Login Screen](./screenshots/login.png)
-
 ---
 
 ### 📊 Dashboard Overview
-![Dashboard](./screenshots/dashboard.png)
+![Dashboard](./public/s2.png)
 
 ---
 
-### 📁 Projects List
-![Projects](./screenshots/projects.png)
+### 📁 Timeline
+![Timeline](./public/s1.png)
 
----
 
-### ✅ Tasks by Project
-![Tasks](./screenshots/tasks.png)
 
----
-
-### ⚡ Create New Task Modal
-![Create Task](./screenshots/create-task.png)
-
----
-
-### 🔥 Priority View (Urgent / High / Low)
-![Priority View](./screenshots/priority.png)
-
----
 
 ## 🧱 Tech Stack
 
