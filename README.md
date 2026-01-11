@@ -1,136 +1,215 @@
-🚀 NITROGEN – Project Management System
+# 🚀 Nitrogen – Frontend
 
-Nitrogen is a cloud-native full-stack Project & Task Management System built using Next.js, AWS, Prisma, and PostgreSQL, designed to simulate real-world enterprise workflows.
+Nitrogen is a **modern project & task management platform** designed for teams to manage projects, tasks, priorities, and collaboration efficiently.
 
-📘 Frontend – README
+This repository contains the **Frontend application**, built with modern web technologies and fully integrated with AWS services and a scalable backend.
 
-client/README.md
+---
 
-🧠 Overview
+## 🌐 Live Application
 
-The Nitrogen Frontend is a modern, responsive web application that allows users to:
+🔗 **Production URL:**  
+https://main.d2zm25dwm40v68.amplifyapp.com
 
-Authenticate securely using AWS Cognito
+---
 
-Create and manage Projects
+## 🧠 What This App Does
 
-Create, assign, and track Tasks
+- User authentication via **AWS Cognito**
+- Create & manage **Projects**
+- Create, assign & track **Tasks**
+- Priority-based task views (Urgent, High, Medium, Low, Backlog)
+- Real-time data fetching with caching
+- Secure API communication with JWT tokens
 
-View tasks by priority, status, and ownership
+---
 
-Interact with a secure, scalable backend API
+## 🖥️ Screenshots
 
-🛠 Tech Stack
-Core
+> 📌 Replace the image paths below with actual screenshots later
 
-Next.js (App Router)
+### 🔐 Authentication (AWS Cognito)
+![Login Screen](./screenshots/login.png)
 
-React
+---
 
-TypeScript
+### 📊 Dashboard Overview
+![Dashboard](./screenshots/dashboard.png)
 
-Tailwind CSS
+---
 
-State & API
+### 📁 Projects List
+![Projects](./screenshots/projects.png)
 
-Redux Toolkit
+---
 
-RTK Query
+### ✅ Tasks by Project
+![Tasks](./screenshots/tasks.png)
 
-Authentication
+---
 
-AWS Amplify
+### ⚡ Create New Task Modal
+![Create Task](./screenshots/create-task.png)
 
-AWS Cognito User Pools
+---
 
-UI
+### 🔥 Priority View (Urgent / High / Low)
+![Priority View](./screenshots/priority.png)
 
-MUI DataGrid
+---
 
-Custom Modal Components
+## 🧱 Tech Stack
 
-Lucide Icons
+### Frontend Core
+- **Next.js 14 (App Router)**
+- **TypeScript**
+- **React 18**
+- **Tailwind CSS**
 
-🔐 Authentication Flow
-User Login
- ↓
-AWS Cognito
- ↓
-JWT Access Token
- ↓
-Token attached to API requests
- ↓
-Backend validates token
+### State Management
+- **Redux Toolkit**
+- **RTK Query** (API caching & data fetching)
 
-🔁 Frontend Data Flow
-UI Event
- ↓
-RTK Query (Mutation / Query)
- ↓
-API Gateway (HTTPS)
- ↓
-Backend Lambda
- ↓
-Database
- ↓
-Response → UI Update
+### UI & Components
+- **Material UI (DataGrid)**
+- **Custom reusable components**
+- **Modal-based workflows**
 
-🌐 Environment Variables
-NEXT_PUBLIC_API_URL=https://<api-id>.execute-api.ap-south-1.amazonaws.com/prod
+### Authentication & Security
+- **AWS Cognito**
+- **AWS Amplify Auth**
+- **JWT-based Authorization**
+
+---
+
+## 🔁 Frontend Architecture Flow
+
+```
+
+User Action (UI)
+↓
+RTK Query Hook
+↓
+AWS API Gateway
+↓
+Backend (Express + Prisma)
+↓
+PostgreSQL (RDS)
+
+````
+
+---
+
+## 🔐 Authentication Flow
+
+1. User logs in via **AWS Cognito**
+2. Cognito returns **JWT Access Token**
+3. Token is automatically attached to API requests
+4. Backend validates token
+5. Authorized data is returned
+
+---
+
+## 📡 API Communication
+
+All API calls are managed using **RTK Query**.
+
+Example:
+```ts
+useGetProjectsQuery()
+useCreateTaskMutation()
+````
+
+### Base API Configuration
+
+```ts
+baseUrl: process.env.NEXT_PUBLIC_API_URL
+```
+
+---
+
+## ⚙️ Environment Variables
+
+Create a `.env.local` file in the root:
+
+```env
+NEXT_PUBLIC_API_URL=https://15kg1nxcp2.execute-api.ap-south-1.amazonaws.com/prod
 NEXT_PUBLIC_COGNITO_USER_POOL_ID=ap-south-1_xxxxx
 NEXT_PUBLIC_COGNITO_USER_POOL_CLIENT_ID=xxxxxxxx
+```
 
+---
 
-Configured in:
+## ▶️ Running Locally
 
-.env.local
+### 1️⃣ Install dependencies
 
-AWS Amplify Console
-
-📂 Folder Structure
-client/
-├── app/
-│   ├── redux/
-│   ├── auth/
-│   └── pages/
-├── components/
-│   ├── Modal.tsx
-│   ├── TaskCard.tsx
-│   └── Header.tsx
-├── state/
-│   └── api.ts
-├── public/
-└── styles/
-
-✨ Features
-
-✅ Secure authentication
-
-✅ Project CRUD
-
-✅ Task CRUD
-
-✅ Priority & Status filtering
-
-✅ Modal-based UI
-
-✅ Optimized API caching
-
-✅ Fully typed API integration
-
-🚀 Running Locally
+```bash
 npm install
+```
+
+### 2️⃣ Start development server
+
+```bash
 npm run dev
+```
 
-☁️ Deployment
+### 3️⃣ Open browser
 
-Hosted on AWS Amplify
+```
+http://localhost:3000
+```
 
-CI/CD via GitHub
+---
 
-Environment variables managed via Amplify Console
+## 📂 Project Structure
 
-👨‍💻 Author
+```
+src/
+│── app/                # Next.js app router
+│── component/          # Reusable UI components
+│── state/              # Redux & RTK Query
+│── styles/             # Global styles
+│── utils/              # Helpers & constants
+```
 
-Harsh Jajaniya
-Frontend • UI/UX • Cloud Engineering
+---
+
+## 🧪 Common Features Implemented
+
+* ✅ Protected routes
+* ✅ Loading & error states
+* ✅ Optimistic updates
+* ✅ Priority filtering
+* ✅ Form validation
+* ✅ Production-ready API integration
+
+---
+
+## 🚀 Deployment
+
+* Hosted on **AWS Amplify**
+* Auto-deploys on `main` branch push
+* Environment variables configured in Amplify console
+
+---
+
+## 🧑‍💻 Author
+
+**Harsh Jajaniya**
+Frontend • Backend • Cloud Architecture
+
+---
+
+## 📌 Notes
+
+* Backend runs independently via AWS API Gateway
+* Prisma & DB logic is **not** handled here
+* This frontend is fully production-ready
+
+---
+
+## ⭐ If you like this project
+
+Give it a ⭐ on GitHub and feel free to contribute!
+```
