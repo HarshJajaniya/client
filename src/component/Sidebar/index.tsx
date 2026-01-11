@@ -67,7 +67,7 @@ const Sidebar = () => {
       <div className="flex w-full flex-col justify-start">
         {/* Header */}
         <div className="dark:border-stroke-dark flex h-14 items-center justify-between border-b px-6">
-          <span className="text-xl font-bold">EDLIST</span>
+          <span className="text-xl font-bold">Nitrogen</span>
           {!isSidebarCollapsed && (
             <button
               onClick={() =>
