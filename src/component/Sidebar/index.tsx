@@ -82,7 +82,7 @@ const Sidebar = () => {
         {/* Team */}
         <div className="dark:border-stroke-dark flex items-center gap-5 border-y px-8 py-4">
           <Image
-            src="https://nitrogen-bucket-1.s3.ap-south-1.amazonaws.com/logo.png"
+            src="https://nitrogen-bucket-1.s3.ap-south-1.amazonaws.com/logo-1.png"
             alt="Team"
             width={40}
             height={40}
