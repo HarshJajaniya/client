@@ -81,7 +81,7 @@ export interface Teams{
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ 
-baseUrl: process.env.NEXT_PUBLIC_API_URL,
+baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api`,
     prepareHeaders: async (headers) => { 
       const session = await fetchAuthSession();
       const {accessToken} = session.tokens ?? {}; 
@@ -158,7 +158,7 @@ baseUrl: process.env.NEXT_PUBLIC_API_URL,
       query: ({ query }) => `search?query=${(query)}`,
     }),
     getUsers: build.query<User[], void>({
-      query: () => "users", 
+      query: () => "users",
       providesTags: ["Users"],
     }),
     getTeams: build.query<Teams[], void>({
