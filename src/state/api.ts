@@ -144,7 +144,7 @@ baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api`,
           : [{ type: "Tasks", id: userId }],
     }),
     getTasks: build.query<Task[], {projectId: number}>({
-      query: ({ projectId }) => `tasks?projectId=${projectId}`, 
+      query: () => "tasks",
       providesTags: (result)=> result? result.map(({id})=>({type:"Tasks" as const, id})): [{type: "Tasks" as const}],
     }),
      createTask: build.mutation<Task, Partial<Task>>({
