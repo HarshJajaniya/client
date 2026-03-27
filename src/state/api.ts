@@ -77,7 +77,7 @@ export interface Teams{
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ 
-baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api`,
+baseUrl: "/api/proxy",
     prepareHeaders: async (headers) => { 
       const {
         data: { session },
