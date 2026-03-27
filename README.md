@@ -11,6 +11,8 @@ This repository contains the **Frontend application**, built with modern web tec
 🔗 **Production URL:**  
 https://main.d2zm25dwm40v68.amplifyapp.com
 
+https://client-8wg8.vercel.app/
+
 ---
 
 ## 🧠 What This App Does
