@@ -38,14 +38,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     };
   }, []);
 
-  useEffect(() => {
-    const getToken = async () => {
-      const { data } = await supabase.auth.getSession();
-      console.log("TOKEN:", data.session?.access_token);
-    };
 
-    getToken();
-  }, []);
 
   const handleLogin = async () => {
     setError(null);

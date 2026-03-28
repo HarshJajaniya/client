@@ -26,7 +26,7 @@ export default function Project(props: Props) {
         onClose={() => setIsmodalTaskOpen(false)}
         id={id}
       />
-      <ProjectHeader activeTab={activeTab} setActiveTab={setActiveTab} />
+      <ProjectHeader id={id} activeTab={activeTab} setActiveTab={setActiveTab} />
       {activeTab === "Board" && (
         <Board id={id} setIsModelNewTaskOpen={setIsmodalTaskOpen} />
       )}

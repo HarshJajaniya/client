@@ -3,13 +3,21 @@ import Header from "@/component/Header";
 import { List, Clock, Table, Filter, Share2, Plus } from "lucide-react";
 import { Grid3x3 } from "lucide-react";
 import ModalnewProject from "./ModalnewProject";
+import { useGetProjectsQuery } from "@/state/api";
+
 type Props = {
+  id?: string;
   activeTab: string;
   setActiveTab: (tabName: string) => void;
 };
 
-const projectHeader = ({ activeTab, setActiveTab }: Props) => {
+const projectHeader = ({ id, activeTab, setActiveTab }: Props) => {
   const [isModelNewProjectOpen, setIsmodelNewProjectOpen] = useState(false);
+  const { data: projects } = useGetProjectsQuery();
+
+  const currentProject = id && projects ? projects.find((p) => p.id === Number(id)) : undefined;
+  const projectName = currentProject?.name || "Project";
+
   return (
     <div className="px-4 xl:px-6">
       {/* Model New Project */}
@@ -20,7 +28,7 @@ const projectHeader = ({ activeTab, setActiveTab }: Props) => {
       <div className="pt-6 pb-4 lg:pt-8 lg:pb-6"></div>
       <div>
         <Header
-          name="Project design Development"
+          name={projectName}
           buttonComponent={
             <button
               className="flex items-center rounded-md bg-blue-500 px-3 py-2 text-white hover:bg-blue-700"
