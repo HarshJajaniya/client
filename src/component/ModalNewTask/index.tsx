@@ -1,4 +1,4 @@
-import { Priority, Status, useCreateTaskMutation } from "@/state/api";
+import { Priority, Status, useCreateTaskMutation, useGetUsersQuery } from "@/state/api";
 import Modal from "@/component/Modal";
 import React, { useState } from "react";
 
@@ -10,6 +10,7 @@ type Props = {
 
 const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
   const [createTask, { isLoading }] = useCreateTaskMutation();
+  const { data: users } = useGetUsersQuery();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -18,14 +19,11 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
   const [tags, setTags] = useState("");
   const [startDate, setStartDate] = useState("");
   const [dueDate, setDueDate] = useState("");
-  const [authorUserId, setAuthorUserId] = useState("");
-  const [assigneeUserId, setAssigneeUserId] = useState("");
+  const [assignedUserId, setAssignedUserId] = useState("");
   const [projectId, setProjectId] = useState("");
 
   const isValidForm = () =>
     title.trim() &&
-    authorUserId.trim() &&
-    assigneeUserId.trim() &&
     (id !== null || projectId.trim());
 
   const handleSubmit = async () => {
@@ -38,9 +36,8 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
         status,
         priority,
         tags,
-        authorUserId: Number(authorUserId),
-        assignedUserId: Number(assigneeUserId),
         projectId: id ? Number(id) : Number(projectId),
+        assignedUserId: assignedUserId || undefined,
         startDate: startDate ? new Date(startDate).toISOString() : undefined,
         dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
       }).unwrap();
@@ -125,18 +122,18 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
           />
         </div>
 
-        <input
-          className={inputStyles}
-          placeholder="Author User ID"
-          value={authorUserId}
-          onChange={(e) => setAuthorUserId(e.target.value)}
-        />
-        <input
-          className={inputStyles}
-          placeholder="Assignee User ID"
-          value={assigneeUserId}
-          onChange={(e) => setAssigneeUserId(e.target.value)}
-        />
+        <select
+          className={selectStyles}
+          value={assignedUserId}
+          onChange={(e) => setAssignedUserId(e.target.value)}
+        >
+          <option value="">Unassigned</option>
+          {users?.map((user) => (
+            <option key={user.userId} value={user.userId}>
+              {user.username}
+            </option>
+          ))}
+        </select>
 
         {id === null && (
           <input
