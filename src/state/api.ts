@@ -83,7 +83,10 @@ baseUrl: "/api/proxy",
         data: { session },
       } = await supabase.auth.getSession();
       const accessToken = session?.access_token;
-
+      if(!accessToken) {
+        console.warn("No access token found for authenticated user");
+        return headers;
+      }
       if (accessToken) {
         headers.set("Authorization", `Bearer ${accessToken}`);
       }

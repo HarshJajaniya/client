@@ -36,13 +36,19 @@ const taskColumns: GridColDef[] = [
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 const HomePage = () => {
+  const { data: projects, isLoading: isProjectsLoading } =
+    useGetProjectsQuery();
+
+  const projectId = projects?.[0]?.id;
+
   const {
     data: tasks,
     isLoading: tasksLoading,
     isError: tasksError,
-  } = useGetTasksQuery({ projectId: parseInt("1") });
-  const { data: projects, isLoading: isProjectsLoading } =
-    useGetProjectsQuery();
+  } = useGetTasksQuery(
+    { projectId: projectId || 0 },
+    { skip: !projectId },
+  );
 
   if (tasksLoading || isProjectsLoading) return <div>Loading..</div>;
   if (tasksError || !tasks || !projects) return <div>Error fetching data</div>;

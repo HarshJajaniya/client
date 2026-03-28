@@ -38,6 +38,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     };
   }, []);
 
+  useEffect(() => {
+    const getToken = async () => {
+      const { data } = await supabase.auth.getSession();
+      console.log("TOKEN:", data.session?.access_token);
+    };
+
+    getToken();
+  }, []);
+
   const handleLogin = async () => {
     setError(null);
     setIsSubmitting(true);
@@ -104,14 +113,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500"
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 caret-gray-900 outline-none focus:border-blue-500"
           />
           <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500"
+            className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder:text-gray-400 caret-gray-900 outline-none focus:border-blue-500"
           />
         </div>
 
