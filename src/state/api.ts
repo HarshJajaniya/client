@@ -148,10 +148,10 @@ baseUrl: "/api/proxy",
     }),
     getTasks: build.query<Task[], { projectId: number }>({
       query: ({ projectId }) => `tasks?projectId=${projectId}`, // ✅ FIXED
-      providesTags: (result) =>
+      providesTags: (result, error, { projectId }) =>
         result
-          ? result.map(({ id }) => ({ type: "Tasks" as const, id }))
-          : [{ type: "Tasks" as const }],
+          ? [{ type: "Tasks", id: projectId }]
+          : [{ type: "Tasks", id: projectId }],
     }),
      createTask: build.mutation<Task, Partial<Task>>({
       query:(task)=>({
@@ -159,7 +159,10 @@ baseUrl: "/api/proxy",
         method: "POST",
         body: task,
       }),
-      invalidatesTags: ["Tasks"],
+      invalidatesTags: (result, error, { projectId }) => 
+        projectId 
+          ? [{ type: "Tasks" as const, id: projectId }]
+          : ["Tasks"],
     }),
      updateTaskStatus: build.mutation<Task, {taskId: number, status: string}>({
       query:({taskId, status})=>({

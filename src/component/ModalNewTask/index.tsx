@@ -6,9 +6,10 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   id?: string | null;
+  onTaskCreated?: () => void;
 };
 
-const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
+const ModalNewTask = ({ isOpen, onClose, id = null, onTaskCreated }: Props) => {
   const [createTask, { isLoading }] = useCreateTaskMutation();
   const { data: users } = useGetUsersQuery();
 
@@ -30,7 +31,7 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
     if (!isValidForm()) return;
 
     try {
-      await createTask({
+      const result = await createTask({
         title,
         description,
         status,
@@ -42,7 +43,21 @@ const ModalNewTask = ({ isOpen, onClose, id = null }: Props) => {
         dueDate: dueDate ? new Date(dueDate).toISOString() : undefined,
       }).unwrap();
 
+      // Reset form on success
+      setTitle("");
+      setDescription("");
+      setStatus(Status.ToDo);
+      setPriority(Priority.Backlog);
+      setTags("");
+      setStartDate("");
+      setDueDate("");
+      setAssignedUserId("");
+      setProjectId("");
+
+      // Close modal and show success
       onClose();
+      onTaskCreated?.();
+      console.log("Task created successfully:", result);
     } catch (err) {
       console.error("Create task failed:", err);
       alert("Failed to create task. Check console.");

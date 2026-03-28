@@ -18,6 +18,7 @@ export default function Project(props: Props) {
 
   const [activeTab, setActiveTab] = useState("Board");
   const [ismodelTaskOpen, setIsmodalTaskOpen] = useState(false);
+  const [taskRenderKey, setTaskRenderKey] = useState(0);
 
   return (
     <div>
@@ -25,19 +26,36 @@ export default function Project(props: Props) {
         isOpen={ismodelTaskOpen}
         onClose={() => setIsmodalTaskOpen(false)}
         id={id}
+        onTaskCreated={() => setTaskRenderKey((prev) => prev + 1)}
       />
       <ProjectHeader id={id} activeTab={activeTab} setActiveTab={setActiveTab} />
       {activeTab === "Board" && (
-        <Board id={id} setIsModelNewTaskOpen={setIsmodalTaskOpen} />
+        <Board
+          key={`board-${taskRenderKey}`}
+          id={id}
+          setIsModelNewTaskOpen={setIsmodalTaskOpen}
+        />
       )}
       {activeTab === "List" && (
-        <List id={id} setIsModelNewTaskOpen={setIsmodalTaskOpen} />
+        <List
+          key={`list-${taskRenderKey}`}
+          id={id}
+          setIsModelNewTaskOpen={setIsmodalTaskOpen}
+        />
       )}
       {activeTab === "Timeline" && (
-        <Timeline id={id} setIsModelNewTaskOpen={setIsmodalTaskOpen} />
+        <Timeline
+          key={`timeline-${taskRenderKey}`}
+          id={id}
+          setIsModelNewTaskOpen={setIsmodalTaskOpen}
+        />
       )}
       {activeTab === "Table" && (
-        <TableView id={id} setIsModalNewTaskOpen={setIsmodalTaskOpen} />
+        <TableView
+          key={`table-${taskRenderKey}`}
+          id={id}
+          setIsModalNewTaskOpen={setIsmodalTaskOpen}
+        />
       )}
     </div>
   );
