@@ -118,13 +118,12 @@ const Sidebar = () => {
         </button>
 
         {showProjects &&
-          projects?.map((project) => (
+          projects?.map((Project) => (
             <SidebarLink
-              key={project.id}
-              href={`/projects/${project.id}`}
+              key={Project.id}
+              href={`/projects/${Project.id}`}
               icon={Briefcase}
-              label={project.name}
-            />
+              label={Project.name }/>
           ))}
 
         {/* Priority */}
@@ -217,7 +216,7 @@ const SidebarLink = ({ href, icon: Icon, label }: SidebarLinkProps) => {
       >
         {isActive && <div className="absolute left-0 h-full w-1 bg-blue-500" />}
         <Icon className="h-6 w-6" />
-        <span className="font-medium">{label}</span>
+        <span className="font-medium text-black dark:text-white">{label}</span>
       </div>
     </Link>
   );
