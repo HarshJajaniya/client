@@ -133,6 +133,7 @@ const ModalNewTask = ({ isOpen, onClose, id = null, onTaskCreated }: Props) => {
             type="date"
             className={inputStyles}
             value={dueDate}
+            min={new Date().toISOString().split('T')[0]}
             onChange={(e) => setDueDate(e.target.value)}
           />
         </div>

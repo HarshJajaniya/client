@@ -39,24 +39,23 @@ const Timeline = ({ id, setIsModelNewTaskOpen }: Props) => {
         const start = new Date(task.startDate);
         const end = new Date(task.dueDate);
 
-        return !isNaN(start.getTime()) && !isNaN(end.getTime());
+        return (
+          !isNaN(start.getTime()) &&
+          !isNaN(end.getTime()) &&
+          end >= start // ✅ IMPORTANT FIX
+        );
       })
-      .map((task) => {
-        const start = new Date(task.startDate!);
-        const end = new Date(task.dueDate!);
-
-        return {
-          start,
-          end,
-          name: task.title,
-          id: `Task-${task.id}`,
-          type: "task" as TaskTypeItems,
-          progress: task.points
-            ? Math.min((task.points / 10) * 100, 100)
-            : 0,
-          isDisabled: false,
-        };
-      }) || []
+      .map((task) => ({
+        start: new Date(task.startDate!),
+        end: new Date(task.dueDate!),
+        name: task.title,
+        id: `Task-${task.id}`,
+        type: "task" as TaskTypeItems,
+        progress: task.points
+          ? Math.min((task.points / 10) * 100, 100)
+          : 0,
+        isDisabled: false,
+      })) || []
   );
 }, [tasks]);
 
