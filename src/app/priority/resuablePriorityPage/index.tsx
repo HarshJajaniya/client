@@ -67,8 +67,14 @@ const ReusablePriorityPage = ({ priority }: Props) => {
   });
 
   /* ------------------ FILTER BY PRIORITY ------------------ */
-  const filteredTasks: Task[] =
-    tasks?.filter((task) => task.priority === priority) ?? [];
+  const normalize = (val?: string) =>
+  val?.trim().toLowerCase();
+
+const filteredTasks: Task[] =
+  tasks?.filter(
+    (task) =>
+      normalize(task.priority) === normalize(priority)
+  ) ?? [];
 
   /* ------------------ STATES ------------------ */
 
