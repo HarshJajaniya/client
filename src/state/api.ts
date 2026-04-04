@@ -139,7 +139,7 @@ baseUrl: "/api/proxy",
       }),
       invalidatesTags: ["Projects"],
     }),
-    getTasksByUser: build.query<Task[], number>({
+    getTasksByUser: build.query<Task[], number | string>({
       query: (userId) => `tasks/user/${userId}`,
       providesTags: (result, error, userId) =>
         result

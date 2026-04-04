@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppSelector } from "@/app/redux";
 import Header from "@/component/Header";
 import ModalNewTask from "@/component/ModalNewTask";
 import TaskCard from "@/component/TaskCard";
@@ -55,7 +54,7 @@ const ReusablePriorityPage = ({ priority }: Props) => {
 
   /* ------------------ USER ------------------ */
   const { data: currentUser } = useGetAuthUserQuery({});
-  const userId = currentUser?.userDetails?.userId ?? null;
+  const userId = currentUser?.userDetails?.userId ?? currentUser?.userSub ?? null;
 
   /* ------------------ TASKS ------------------ */
   const {
@@ -67,14 +66,10 @@ const ReusablePriorityPage = ({ priority }: Props) => {
   });
 
   /* ------------------ FILTER BY PRIORITY ------------------ */
-  const normalize = (val?: string) =>
-  val?.trim().toLowerCase();
+  const normalize = (val?: string) => val?.trim().toLowerCase();
 
-const filteredTasks: Task[] =
-  tasks?.filter(
-    (task) =>
-      normalize(task.priority) === normalize(priority)
-  ) ?? [];
+  const filteredTasks: Task[] =
+    tasks?.filter((task) => normalize(task.priority) === normalize(priority)) ?? [];
 
   /* ------------------ STATES ------------------ */
 
