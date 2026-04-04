@@ -153,6 +153,29 @@ baseUrl: "/api/proxy",
           ? [{ type: "Tasks", id: projectId }]
           : [{ type: "Tasks", id: projectId }],
     }),
+    getTasksAcrossProjects: build.query<Task[], void>({
+      async queryFn(_arg, _queryApi, _extraOptions, fetchWithBQ) {
+        const projectsRes = await fetchWithBQ("projects");
+
+        if (projectsRes.error) {
+          return { error: projectsRes.error };
+        }
+
+        const projects = (projectsRes.data as Project[]) ?? [];
+        const allTasks: Task[] = [];
+
+        for (const project of projects) {
+          const tasksRes = await fetchWithBQ(`tasks?projectId=${project.id}`);
+          if (!tasksRes.error) {
+            const projectTasks = (tasksRes.data as Task[]) ?? [];
+            allTasks.push(...projectTasks);
+          }
+        }
+
+        return { data: allTasks };
+      },
+      providesTags: ["Tasks"],
+    }),
      createTask: build.mutation<Task, Partial<Task>>({
       query:(task)=>({
         url: "tasks",
@@ -191,6 +214,7 @@ export const { useGetUsersQuery,
   useGetProjectsQuery,
    useCreateProjectMutation,
     useGetTasksQuery,
+  useGetTasksAcrossProjectsQuery,
      useCreateTaskMutation,
       useUpdateTaskStatusMutation,
       useSearchQuery,
